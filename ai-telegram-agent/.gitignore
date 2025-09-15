@@ -1,0 +1,6 @@
+.venv_linux
+.venv
+.idea
+**.pt
+**__pycache__**
+checkpoint.pt

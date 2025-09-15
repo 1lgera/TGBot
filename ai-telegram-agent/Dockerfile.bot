@@ -1,0 +1,45 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app/src
+
+# Создание пользователя
+RUN addgroup --system appgroup && \
+    adduser --system --no-create-home --ingroup appgroup appuser
+
+RUN mkdir -p /app/cache && chown -R appuser:appgroup /app/cache
+ENV TRANSFORMERS_CACHE=/app/cache
+
+WORKDIR /app
+
+# Установка системных зависимостей для torch
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    libgl1 \
+    libsm6 \
+    libxrender1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка основных пакетов
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+# Установка flask-cors
+RUN pip install -U flask-cors
+
+COPY . .
+
+# Копирование config.yml и настройка прав доступа
+COPY --chown=appuser:appgroup config.yml /app/config.yml
+# Доступ для владельца на чтение/запись
+RUN chmod 600 /app/config.yml
+
+# Переключение на созданного пользователя
+USER appuser
+
+CMD ["sh", "-c", "cd src/controller && python telegram.py"]

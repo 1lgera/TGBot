@@ -1,0 +1,13 @@
+flask
+pyyaml
+pymongo
+ollama
+requests
+pyTelegramBotAPI
+transformers
+numpy
+joblib
+pandas
+scikit-learn
+seaborn
+openai

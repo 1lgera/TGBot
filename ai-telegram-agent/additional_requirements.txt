@@ -1,0 +1,8 @@
+# For linux
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# For windows
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+
+pip3 install -U flask-cors
